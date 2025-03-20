@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({super.key});
+
   @override
   State<ForgotPassword> createState() => _ForgotPasswordState();
 }
@@ -12,10 +13,11 @@ class ForgotPassword extends StatefulWidget {
 class _ForgotPasswordState extends State<ForgotPassword> {
   final numberController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false, 
       body: Stack(
         children: [
           Container(
@@ -25,6 +27,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               ),
             ),
           ),
+
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -63,9 +66,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         child: Column(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                              ),
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
                               child: Text(
                                 "Please enter your mobile number to recover your password",
                                 textAlign: TextAlign.center,
@@ -77,8 +78,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                             ),
                             SizedBox(height: 30),
                             TextFormField(
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
                               controller: numberController,
                               keyboardType: TextInputType.number,
                               inputFormatters: [

@@ -10,6 +10,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(debugShowCheckedModeBanner: false, home: MyHomePage());
@@ -30,19 +31,23 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController numbercontroller = TextEditingController();
   final TextEditingController passwordcontroller = TextEditingController();
   bool _isObscured = true;
+
   @override
   Widget build(BuildContext context) {
-    MediaQuery.of(context).size.height;
-    MediaQuery.of(context).size.width;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(45),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xFF3F5EFB), Color(0xFFFC466B)],
+        child: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xFF3F5EFB), Color(0xFFFC466B)],
+              ),
             ),
           ),
         ),
@@ -58,136 +63,29 @@ class _MyHomePageState extends State<MyHomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 65),
-                    TextFormField(
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      controller: namecontroller,
-                      decoration: InputDecoration(
-                        hintText: 'Full Name',
-                        hintStyle: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 19,
-                          fontFamily: 'Roboto',
-                          fontWeight: FontWeight.normal,
-                        ),
-                        prefixIcon: Icon(
-                          Icons.person_2_outlined,
-                          color: Colors.blueAccent,
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your name';
-                        }
-                        return null;
-                      },
+                    _buildTextField(
+                      namecontroller,
+                      'Full Name',
+                      Icons.person_2_outlined,
                     ),
                     SizedBox(height: 15),
-                    TextFormField(
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      controller: mailcontroller,
-                      decoration: InputDecoration(
-                        hintText: 'Email',
-                        hintStyle: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 19,
-                          fontFamily: 'Roboto',
-                          fontWeight: FontWeight.normal,
-                        ),
-                        prefixIcon: Icon(
-                          Icons.email_outlined,
-                          color: Colors.blueAccent,
-                        ),
-                      ),
+                    _buildTextField(
+                      mailcontroller,
+                      'Email',
+                      Icons.email_outlined,
                       keyboardType: TextInputType.emailAddress,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Enter a valid email';
-                        }
-                        if (!RegExp(
-                          r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                        ).hasMatch(value)) {
-                          return 'Enter a valid email';
-                        }
-                        return null;
-                      },
                     ),
                     SizedBox(height: 15),
-                    TextFormField(
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      controller: numbercontroller,
+                    _buildTextField(
+                      numbercontroller,
+                      'Mobile Number',
+                      Icons.phone_android_outlined,
                       keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       maxLength: 10,
-                      decoration: InputDecoration(
-                        prefix: Text('+91 '),
-                        hintText: 'Mobile Number',
-                        hintStyle: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 19,
-                          fontFamily: 'Roboto',
-                          fontWeight: FontWeight.normal,
-                        ),
-                        prefixIcon: Icon(
-                          Icons.phone_android_outlined,
-                          color: Colors.blueAccent,
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your number';
-                        }
-                        return null;
-                      },
+                      prefix: '+91 ',
                     ),
-                    TextFormField(
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      controller: passwordcontroller,
-                      decoration: InputDecoration(
-                        hintText: 'Enter Password',
-                        hintStyle: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 19,
-                          fontFamily: 'Roboto',
-                          fontWeight: FontWeight.normal,
-                        ),
-                        prefixIcon: Icon(
-                          Icons.lock_outline,
-                          color: Colors.blueAccent,
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _isObscured
-                                ? Icons.visibility_off_outlined
-                                : Icons.visibility_outlined,
-                            color: Colors.grey,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _isObscured = !_isObscured;
-                            });
-                          },
-                        ),
-                      ),
-                      obscureText: _isObscured,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Password can not be empty';
-                        } else if (value.length < 8) {
-                          return 'Password must be at least 8 characters long';
-                        } else if (!RegExp(r'[A-Z]').hasMatch(value)) {
-                          return 'Password must have at least one uppercase letter';
-                        } else if (!RegExp(r'[a-z]').hasMatch(value)) {
-                          return 'Password must have at least one uppercase letter';
-                        } else if (!RegExp(r'[0-9]').hasMatch(value)) {
-                          return 'Password must have at least one lowercase letter';
-                        } else if (!RegExp(
-                          r'[!@#$%^&*(),.?":{}|<>]',
-                        ).hasMatch(value)) {
-                          return 'Password must have at least one special character';
-                        }
-                        return null;
-                      },
-                    ),
+                    _buildPasswordField(),
                     SizedBox(height: 25),
                     custom.CustomEvatedButton(
                       label: 'Create Account',
@@ -203,159 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                     ),
                     SizedBox(height: 90),
-                    Container(
-                      alignment: Alignment.center,
-                      child: Flexible(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'or sign in using',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    color: const Color.fromARGB(
-                                      255,
-                                      108,
-                                      107,
-                                      107,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 10),
-                            Padding(
-                              padding: EdgeInsets.only(right: 0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
-                                        ),
-                                        backgroundColor: const Color.fromARGB(
-                                          255,
-                                          29,
-                                          76,
-                                          157,
-                                        ),
-                                      ),
-                                      onPressed: () {},
-                                      child: Text(
-                                        'Facebook',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 20),
-                                  Expanded(
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
-                                        ),
-                                        backgroundColor: const Color.fromARGB(
-                                          255,
-                                          214,
-                                          72,
-                                          96,
-                                        ),
-                                      ),
-                                      onPressed: () {},
-                                      child: Text(
-                                        'Google',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Flexible(
-                                  child: Text(
-                                    'By creating an account, you agree to our',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: const Color.fromARGB(
-                                        255,
-                                        91,
-                                        91,
-                                        91,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                InkWell(
-                                  onTap: () {},
-                                  child: Text(
-                                    ' Terms',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.redAccent,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 60),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Already have an account?',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    color: const Color.fromARGB(
-                                      255,
-                                      91,
-                                      91,
-                                      91,
-                                    ),
-                                  ),
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => SignIn(),
-                                      ),
-                                    );
-                                  },
-                                  child: Text(
-                                    ' Sign In',
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                      color: Colors.redAccent,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    _buildSignInOption(),
                   ],
                 ),
               ),
@@ -363,6 +109,161 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         },
       ),
+    );
+  }
+
+  Widget _buildTextField(
+    TextEditingController controller,
+    String hintText,
+    IconData icon, {
+    TextInputType? keyboardType,
+    List<TextInputFormatter>? inputFormatters,
+    int? maxLength,
+    String? prefix,
+  }) {
+    return TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      controller: controller,
+      decoration: InputDecoration(
+        hintText: hintText,
+        hintStyle: TextStyle(color: Colors.black87, fontSize: 19),
+        prefixIcon: Icon(icon, color: Colors.blueAccent),
+        prefix: prefix != null ? Text(prefix) : null,
+      ),
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
+      maxLength: maxLength,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Please enter your $hintText';
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      controller: passwordcontroller,
+      decoration: InputDecoration(
+        hintText: 'Enter Password',
+        hintStyle: TextStyle(color: Colors.black87, fontSize: 19),
+        prefixIcon: Icon(Icons.lock_outline, color: Colors.blueAccent),
+        suffixIcon: IconButton(
+          icon: Icon(
+            _isObscured
+                ? Icons.visibility_off_outlined
+                : Icons.visibility_outlined,
+            color: Colors.grey,
+          ),
+          onPressed: () {
+            setState(() {
+              _isObscured = !_isObscured;
+            });
+          },
+        ),
+      ),
+      obscureText: _isObscured,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Password cannot be empty';
+        } else if (value.length < 8) {
+          return 'Password must be at least 8 characters long';
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget _buildSignInOption() {
+    return Container(
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'or sign in using',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Color.fromARGB(255, 108, 107, 107),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+          Padding(
+            padding: EdgeInsets.only(right: 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(child: _buildSocialButton('Facebook', Colors.blue)),
+                SizedBox(width: 20),
+                Expanded(child: _buildSocialButton('Google', Colors.red)),
+              ],
+            ),
+          ),
+          SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'By creating an account, you agree to our',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Color.fromARGB(255, 91, 91, 91),
+                ),
+              ),
+              InkWell(
+                onTap: () {},
+                child: Text(
+                  ' Terms',
+                  style: TextStyle(fontSize: 15, color: Colors.redAccent),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 60),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Already have an account?',
+                style: TextStyle(
+                  fontSize: 17,
+                  color: Color.fromARGB(255, 91, 91, 91),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignIn()),
+                  );
+                },
+                child: Text(
+                  ' Sign In',
+                  style: TextStyle(fontSize: 17, color: Colors.redAccent),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSocialButton(String text, Color color) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        backgroundColor: color,
+      ),
+      onPressed: () {},
+      child: Text(text, style: TextStyle(color: Colors.white, fontSize: 20)),
     );
   }
 }

@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  getCurrentLocation() async {
+  getCurrentLocation(context) async {
     LocationPermission permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied ||
         permission == LocationPermission.deniedForever) {
@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     } else {
       Position currentPosition = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.best,
+        locationSettings: LocationSettings(accuracy: LocationAccuracy.high),
       );
       setState(() {
         location =
@@ -135,7 +135,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 13, vertical: 20),
                     child: ElevatedButton(
                       onPressed: () => _changeColor(2),
-
                       style: ElevatedButton.styleFrom(
                         backgroundColor: button2color,
                         minimumSize: Size(180, 50),
@@ -149,11 +148,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
+    
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: GestureDetector(
                 onTap: () async {
-                  await getCurrentLocation();
+                  await getCurrentLocation(context);
                 },
                 child: AbsorbPointer(
                   child: TextField(
@@ -166,6 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+     
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: TextField(
@@ -195,7 +196,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Text("Rs 1600 - Rs 2000"),
                           ),
                           PopupMenuItem(
-                            value: " Above Rs 2000",
+                            value: "Above Rs 2000",
                             child: Text("Above Rs 2000"),
                           ),
                         ],
@@ -203,6 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: TextField(
@@ -223,6 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: TextField(
@@ -244,8 +247,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Text("Double Seater"),
                           ),
                           PopupMenuItem(
-                            value: "Tripple Seater",
-                            child: Text("Tripple Seater"),
+                            value: "Triple Seater",
+                            child: Text("Triple Seater"),
                           ),
                         ],
                   ),
@@ -278,12 +281,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 Text("Air Conditioned"),
               ],
             ),
+          
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: CustomEvatedButton(label: "Search", onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => HotelsScreen()));
               }),
             ),
+            // Rooms section
             Container(
               width: MediaQuery.of(context).size.width,
               padding: EdgeInsets.only(left: 15, top: 10, right: 10),
